@@ -1,0 +1,29 @@
+jenkins:
+ image: jenkins
+ volumes_from:
+  - jenkinsdata
+ ports:
+  - "8080:8080"
+  - "50000:50000"
+
+jenkinsdata:
+ build: jenkins-data
+
+gitlab:
+ image: 'gitlab/gitlab-ce:latest'
+ restart: always
+ hostname: 'gitlab.example.com'
+ environment:
+  GITLAB_OMNIBUS_CONFIG: |
+   external_url 'https://gitlab.example.com'
+   gitlab_rails['gitlab_shell_ssh_port'] = 2224
+ ports:
+  - '80:80'
+  - '443:443'
+  - '2224:22'
+ volumes_from:
+  - gitlabdata
+
+gitlabdata:
+ build: gitlab-data
+
