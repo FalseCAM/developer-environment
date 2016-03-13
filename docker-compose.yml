@@ -18,8 +18,8 @@ gitlab:
    external_url 'https://gitlab.example.com'
    gitlab_rails['gitlab_shell_ssh_port'] = 2224
  ports:
-  - '80:80'
-  - '443:443'
+#  - '80:80'
+#  - '443:443'
   - '2224:22'
  volumes_from:
   - gitlabdata
@@ -27,3 +27,10 @@ gitlab:
 gitlabdata:
  build: gitlab-data
 
+nginx:
+ build: nginx
+ ports:
+  - "80:80"
+ links:
+  - jenkins:jenkins
+  - gitlab:gitlab
