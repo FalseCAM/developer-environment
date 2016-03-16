@@ -34,3 +34,9 @@ nginx:
  links:
   - jenkins:jenkins
   - gitlab:gitlab
+  - ldapaccountmanager:ldapaccountmanager
+
+ldapaccountmanager:
+ build: ldap-account-manager
+# ports:
+#  - "80:80"
