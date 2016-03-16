@@ -40,3 +40,13 @@ ldapaccountmanager:
  build: ldap-account-manager
 # ports:
 #  - "80:80"
+
+samba:
+ build: samba
+ ports:
+  - '445:445'
+  - '137:137'
+  - '138:138'
+  - '139:139'
+ environment:
+  workgroup: "workgroup"
