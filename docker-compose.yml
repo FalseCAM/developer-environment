@@ -1,3 +1,36 @@
+mysql:
+ image: 'mysql:latest'
+ restart: always
+ hostname: 'mysql.example.com'
+ environment:
+  - MYSQL_ROOT_PASSWORD="my-secret-pw"
+  - MYSQL_USER="example-user"
+  - MYSQL_PASSWORD="my-secret-pw"
+  - MYSQL_DATABASE="example-database"
+ ports:
+  - '3306:3306'
+ volumes_from:
+  - mysqldata
+
+mysqldata:
+ build: mysql-data
+
+postgresql:
+ image: 'postgres:latest'
+ restart: always
+ hostname: 'postgresql.example.com'
+ environment:
+  - POSTGRES_PASSWORD="my-secret-pw"
+  - POSTGRES_USER="example-user"
+  - POSTGRES_DB="example-database"
+ ports:
+  - '5432:5432'
+ volumes_from:
+  - postgresqldata
+
+postgresqldata:
+ build: postgresql-data
+
 jenkins:
  image: jenkins
  volumes_from:
