@@ -29,6 +29,8 @@ gitlabdata:
 
 nginx:
  build: nginx
+ volumes_from:
+  - nginxdata
  ports:
   - "80:80"
  restart: always
@@ -36,6 +38,9 @@ nginx:
   - jenkins:jenkins
   - gitlab:gitlab
   - ldapaccountmanager:ldapaccountmanager
+
+nginxdata:
+ build: nginx-data
 
 ldapaccountmanager:
  build: ldap-account-manager

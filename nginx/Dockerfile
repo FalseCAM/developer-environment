@@ -5,10 +5,9 @@ RUN yum -y install nginx-1.8.0
 RUN rm /etc/nginx/conf.d/default.conf
 RUN rm /etc/nginx/conf.d/example_ssl.conf
 
-COPY conf/gitlab.conf /etc/nginx/conf.d/gitlab.conf
-COPY conf/jenkins.conf /etc/nginx/conf.d/jenkins.conf
-COPY conf/ldapaccountmanager.conf /etc/nginx/ldapaccountmanager.conf
 COPY conf/nginx.conf /etc/nginx/nginx.conf
+
+VOLUME /etc/nginx/conf.d
 
 EXPOSE 80
 CMD ["nginx"]
