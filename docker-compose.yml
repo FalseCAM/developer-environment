@@ -3,12 +3,12 @@ mysql:
  restart: always
  hostname: 'mysql.example.com'
  environment:
-  - MYSQL_ROOT_PASSWORD="my-secret-pw"
+  - MYSQL_ROOT_PASSWORD="Password1!"
   - MYSQL_USER="example-user"
   - MYSQL_PASSWORD="my-secret-pw"
   - MYSQL_DATABASE="example-database"
- ports:
-  - '3306:3306'
+# ports:
+#  - '3306:3306'
  volumes_from:
   - mysqldata
 
@@ -20,11 +20,11 @@ postgresql:
  restart: always
  hostname: 'postgresql.example.com'
  environment:
-  - POSTGRES_PASSWORD="my-secret-pw"
-  - POSTGRES_USER="example-user"
-  - POSTGRES_DB="example-database"
- ports:
-  - '5432:5432'
+  - POSTGRES_PASSWORD=Password1!
+  - POSTGRES_USER=root
+  - POSTGRES_DB=example-database
+# ports:
+#  - '5432:5432'
  volumes_from:
   - postgresqldata
 
@@ -33,10 +33,11 @@ postgresqldata:
 
 jenkins:
  image: jenkins
+ hostname: 'jenkins.example.com'
  volumes_from:
   - jenkinsdata
  ports:
-  - "8080:8080"
+#  - "8080:8080"
   - "50000:50000"
 
 jenkinsdata:
@@ -52,7 +53,6 @@ gitlab:
    gitlab_rails['gitlab_shell_ssh_port'] = 2224
  ports:
 #  - '80:80'
-#  - '443:443'
   - '2224:22'
  volumes_from:
   - gitlabdata
@@ -68,6 +68,7 @@ nginx:
   - "80:80"
  restart: always
  links:
+  - openldap:openldap
   - jenkins:jenkins
   - gitlab:gitlab
   - ldapaccountmanager:ldapaccountmanager
@@ -76,32 +77,61 @@ nginxdata:
  build: nginx-data
 
 ldapaccountmanager:
+ hostname: 'ldapaccountmanager.example.com'
  build: ldap-account-manager
+ links:
+  - openldap:openldap
 # ports:
 #  - "80:80"
 
-samba:
- build: samba
+#samba:
+# build: samba-ad-dc
+# volumes_from:
+#  - sambadata
+# privileged: true
+# restart: always
+# ports:
+#  - '53:53'
+#  - '88:88'
+#  - '135:135'
+#  - '137:137'
+#  - '138:138'
+#  - '139:139'
+#  - '389:389'
+#  - '445:445'
+#  - '464:464'
+#  - '636:636'
+#  - '3268:3268'
+#  - '3269:3269'
+
+# environment:
+#  SAMBA_DOMAIN: "samba"
+#  SAMBA_REALM: "example.com"
+#  SAMBA_PASSWORD: "Password1!"
+#  SAMBA_DNS_FORWARDER: "8.8.8.8"
+#  workgroup: "workgroup"
+
+#sambadata:
+# build: samba-data
+
+openldap:
+ image: dinkel/openldap
+ hostname: 'ldap.example.com'
  volumes_from:
-  - sambadata
+  - openldapdata
  restart: always
  ports:
-  - '53:53'
-  - '88:88'
-  - '135:135'
-  - '137:137'
-  - '138:138'
-  - '139:139'
   - '389:389'
-  - '445:445'
-  - '464:464'
-  - '636:636'
-  - '1024-1050:1024-1050'
-  - '3268:3268'
-  - '3269:3269'
 
  environment:
-  workgroup: "workgroup"
+  SLAPD_DOMAIN: "ldap.example.com"
+  SLAPD_PASSWORD: "Password1!"
+#  SLAPD_CONFIG_PASSWORD: "Password1!"
+#  SLAPD_ORGANIZATION: "Example com"
+  SLAPD_ADDITIONAL_SCHEMAS: "openldap,misc"
+  SLAPD_ADDITIONAL_MODULES: "memberof"
 
-sambadata:
- build: samba-data
+
+openldapdata:
+ build: openldap-data
+
