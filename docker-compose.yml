@@ -39,6 +39,21 @@ services:
  postgresqldata:
   build: postgresql-data
 
+ git:
+  build: git
+  hostname: 'git.example.com'
+  networks:
+   - devenv
+  volumes_from:
+   - gitdata
+  ports:
+   - "2222:22"
+  restart: always
+
+ gitdata:
+  build: git-data
+
+
  jenkins:
   image: jenkins:2.0-beta-1
   hostname: 'jenkins.example.com'
