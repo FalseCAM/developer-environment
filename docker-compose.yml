@@ -4,7 +4,8 @@ services:
 
  mysql:
   image: 'mysql:latest'
-  hostname: 'mysql.example.com'
+  domainname: example.com
+  hostname: mysql
   networks:
    - devenv
   restart: always
@@ -23,7 +24,8 @@ services:
  
  postgresql:
   image: 'postgres:latest'
-  hostname: 'postgresql.example.com'
+  domainname: example.com
+  hostname: postgresql
   networks:
    - devenv
   restart: always
@@ -41,7 +43,8 @@ services:
 
  git:
   build: git
-  hostname: 'git.example.com'
+  domainname: example.com
+  hostname: git
   networks:
    - devenv
   volumes_from:
@@ -53,10 +56,10 @@ services:
  gitdata:
   build: git-data
 
-
  jenkins:
   image: jenkins:2.0-beta-1
-  hostname: 'jenkins.example.com'
+  domainname: example.com
+  hostname: jenkins
   networks:
    - devenv
   restart: always
@@ -71,7 +74,8 @@ services:
 
  gitlab:
   image: 'gitlab/gitlab-ce:latest'
-  hostname: 'gitlab.example.com'
+  domainname: example.com
+  hostname: gitlab
   networks:
    - devenv
   restart: always
@@ -90,13 +94,15 @@ services:
 
  nginx:
   build: nginx
-  hostname: 'nginx.example.com'
+  domainname: example.com
+  hostname: nginx
   networks:
    - devenv
   volumes_from:
    - nginxdata
   ports:
    - "80:80"
+   - "443:443"
   restart: always
 
  nginxdata:
@@ -104,7 +110,8 @@ services:
 
  ldapaccountmanager:
   build: ldap-account-manager
-  hostname: 'ldapaccountmanager.example.com'
+  domainname: example.com
+  hostname: ldapaccountmanager
   networks:
    - devenv
 # ports:
@@ -142,7 +149,8 @@ services:
 
  openldap:
   image: dinkel/openldap
-  hostname: 'ldap.example.com'
+  domainname: example.com
+  hostname: ldap
   networks:
    - devenv
   volumes_from:
