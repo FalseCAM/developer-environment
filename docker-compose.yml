@@ -1,86 +1,97 @@
-mysql:
- image: 'mysql:latest'
- restart: always
- hostname: 'mysql.example.com'
- environment:
-  - MYSQL_ROOT_PASSWORD="Password1!"
-  - MYSQL_USER="example-user"
-  - MYSQL_PASSWORD="my-secret-pw"
-  - MYSQL_DATABASE="example-database"
+version: '2'
+
+services:
+
+ mysql:
+  image: 'mysql:latest'
+  hostname: 'mysql.example.com'
+  networks:
+   - devenv
+  restart: always
+  environment:
+   - MYSQL_ROOT_PASSWORD="Password1!"
+   - MYSQL_USER="example-user"
+   - MYSQL_PASSWORD="my-secret-pw"
+   - MYSQL_DATABASE="example-database"
 # ports:
 #  - '3306:3306'
- volumes_from:
-  - mysqldata
+  volumes_from:
+   - mysqldata
 
-mysqldata:
- build: mysql-data
-
-postgresql:
- image: 'postgres:latest'
- restart: always
- hostname: 'postgresql.example.com'
- environment:
-  - POSTGRES_PASSWORD=Password1!
-  - POSTGRES_USER=root
-  - POSTGRES_DB=example-database
+ mysqldata:
+  build: mysql-data
+ 
+ postgresql:
+  image: 'postgres:latest'
+  hostname: 'postgresql.example.com'
+  networks:
+   - devenv
+  restart: always
+  environment:
+   - POSTGRES_PASSWORD=Password1!
+   - POSTGRES_USER=root
+   - POSTGRES_DB=example-database
 # ports:
 #  - '5432:5432'
- volumes_from:
-  - postgresqldata
+  volumes_from:
+   - postgresqldata
 
-postgresqldata:
- build: postgresql-data
+ postgresqldata:
+  build: postgresql-data
 
-jenkins:
- image: jenkins
- hostname: 'jenkins.example.com'
- volumes_from:
-  - jenkinsdata
- ports:
+ jenkins:
+  image: jenkins
+  hostname: 'jenkins.example.com'
+  networks:
+   - devenv
+  restart: always
+  volumes_from:
+   - jenkinsdata
+  ports:
 #  - "8080:8080"
-  - "50000:50000"
+   - "50000:50000"
 
-jenkinsdata:
- build: jenkins-data
+ jenkinsdata:
+  build: jenkins-data
 
-gitlab:
- image: 'gitlab/gitlab-ce:latest'
- restart: always
- hostname: 'gitlab.example.com'
- environment:
-  GITLAB_OMNIBUS_CONFIG: |
-   external_url 'https://gitlab.example.com'
-   gitlab_rails['gitlab_shell_ssh_port'] = 2224
- ports:
+ gitlab:
+  image: 'gitlab/gitlab-ce:latest'
+  hostname: 'gitlab.example.com'
+  networks:
+   - devenv
+  restart: always
+  environment:
+   GITLAB_OMNIBUS_CONFIG: |
+    external_url 'https://gitlab.example.com'
+    gitlab_rails['gitlab_shell_ssh_port'] = 2224
+  ports:
 #  - '80:80'
-  - '2224:22'
- volumes_from:
-  - gitlabdata
+   - '2224:22'
+  volumes_from:
+   - gitlabdata
 
-gitlabdata:
- build: gitlab-data
+ gitlabdata:
+  build: gitlab-data
 
-nginx:
- build: nginx
- volumes_from:
-  - nginxdata
- ports:
-  - "80:80"
- restart: always
- links:
-  - openldap:openldap
-  - jenkins:jenkins
-  - gitlab:gitlab
-  - ldapaccountmanager:ldapaccountmanager
+ nginx:
+  build: nginx
+  hostname: 'nginx.example.com'
+  networks:
+   - devenv
+  volumes_from:
+   - nginxdata
+  ports:
+   - "80:80"
+  restart: always
 
-nginxdata:
- build: nginx-data
+ nginxdata:
+  build: nginx-data
 
-ldapaccountmanager:
- hostname: 'ldapaccountmanager.example.com'
- build: ldap-account-manager
- links:
-  - openldap:openldap
+ ldapaccountmanager:
+  build: ldap-account-manager
+  hostname: 'ldapaccountmanager.example.com'
+  networks:
+   - devenv
 # ports:
 #  - "80:80"
 
@@ -114,24 +125,29 @@ ldapaccountmanager:
 #sambadata:
 # build: samba-data
 
-openldap:
- image: dinkel/openldap
- hostname: 'ldap.example.com'
- volumes_from:
-  - openldapdata
- restart: always
- ports:
-  - '389:389'
+ openldap:
+  image: dinkel/openldap
+  hostname: 'ldap.example.com'
+  networks:
+   - devenv
+  volumes_from:
+   - openldapdata
+  restart: always
+  ports:
+   - '389:389'
 
- environment:
-  SLAPD_DOMAIN: "ldap.example.com"
-  SLAPD_PASSWORD: "Password1!"
+  environment:
+   SLAPD_DOMAIN: "ldap.example.com"
+   SLAPD_PASSWORD: "Password1!"
 #  SLAPD_CONFIG_PASSWORD: "Password1!"
 #  SLAPD_ORGANIZATION: "Example com"
-  SLAPD_ADDITIONAL_SCHEMAS: "openldap,misc"
-  SLAPD_ADDITIONAL_MODULES: "memberof"
+   SLAPD_ADDITIONAL_SCHEMAS: "openldap,misc"
+   SLAPD_ADDITIONAL_MODULES: "memberof"
+
+ openldapdata:
+  build: openldap-data
 
 
-openldapdata:
- build: openldap-data
+networks:
+ devenv:
 
