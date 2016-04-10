@@ -40,7 +40,7 @@ services:
   build: postgresql-data
 
  jenkins:
-  image: jenkins
+  image: jenkins:2.0-beta-1
   hostname: 'jenkins.example.com'
   networks:
    - devenv
