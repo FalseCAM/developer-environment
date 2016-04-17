@@ -1,2 +1,3 @@
-FROM dinkel/openldap
-VOLUME ["/etc/ldap", "/var/lib/ldap"]
+FROM osixia/openldap
+VOLUME ["/var/lib/ldap", "/etc/ldap/slapd.d"]
+ENTRYPOINT ["hostname"]

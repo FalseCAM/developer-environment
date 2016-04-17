@@ -1,4 +1,3 @@
 FROM gitlab/gitlab-ce:latest
-VOLUME /etc/gitlab
-VOLUME /var/log/gitlab
-VOLUME /var/opt/gitlab
+VOLUME ["/etc/gitlab", "/var/log/gitlab", "/var/opt/gitlab"]
+ENTRYPOINT ["hostname"]

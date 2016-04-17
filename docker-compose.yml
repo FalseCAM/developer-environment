@@ -149,9 +149,9 @@ services:
 # build: samba-data
 
  openldap:
-  image: dinkel/openldap
+  image: osixia/openldap
   domainname: example.com
-  hostname: ldap
+  hostname: openldap
   networks:
    - devenv
   volumes_from:
@@ -159,18 +159,27 @@ services:
   restart: always
   ports:
    - '389:389'
-
+   - '636:636'
   environment:
-   SLAPD_DOMAIN: "ldap.example.com"
-   SLAPD_PASSWORD: "Password1!"
-#  SLAPD_CONFIG_PASSWORD: "Password1!"
-#  SLAPD_ORGANIZATION: "Example com"
-   SLAPD_ADDITIONAL_SCHEMAS: "openldap,misc"
-   SLAPD_ADDITIONAL_MODULES: "memberof"
+   LDAP_DOMAIN: "example.com"
+   LDAP_BASE_DN: "dc=example,dc=com"
+   LDAP_ADMIN_PASSWORD: "Password1!"
+   LDAP_CONFIG_PASSWORD: "Password1!"
 
  openldapdata:
   build: openldap-data
 
+ ldapadmin:
+  image: osixia/phpldapadmin
+  domainname: example.com
+  hostname: ldapadmin
+  networks:
+   - devenv
+  restart: always
+  environment:
+   PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'openldap': [{'server': [{'tls': True}]},{'login': [{'bind_id': 'cn=admin,dc=example,dc=com'}]}]}]"
+
+######
 
 networks:
  devenv:
