@@ -81,7 +81,7 @@ services:
   restart: always
   environment:
    GITLAB_OMNIBUS_CONFIG: |
-    external_url 'https://gitlab.example.com'
+    external_url 'http://gitlab.example.com'
     gitlab_rails['gitlab_shell_ssh_port'] = 2224
   ports:
 #  - '80:80'
@@ -114,6 +114,7 @@ services:
   hostname: ldapaccountmanager
   networks:
    - devenv
+  restart: always
 # ports:
 #  - "80:80"
 

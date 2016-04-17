@@ -5,9 +5,12 @@ RUN yum -y install nginx-1.8.0
 RUN rm /etc/nginx/conf.d/default.conf
 RUN rm /etc/nginx/conf.d/example_ssl.conf
 
+RUN mkdir -p /etc/nginx/ssl/
+
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
 VOLUME /etc/nginx/conf.d
+VOLUME /etc/nginx/ssl
 
-EXPOSE 80
+EXPOSE 80 443
 CMD ["nginx"]
