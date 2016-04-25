@@ -92,6 +92,23 @@ services:
  gitlabdata:
   build: gitlab-data
 
+ gitlabrunner:
+  image: 'gitlab/gitlab-runner'
+  domainname: example.com
+  hostname: gitlabrunner
+  networks:
+   - devenv
+  restart: always
+  volumes:
+   - /var/run/docker.sock:/var/run/docker.sock
+  volumes_from:
+   - gitlabrunnerdata
+
+ gitlabrunnerdata:
+  build: gitlabrunner-data
+
+
+
  nginx:
   build: nginx
   domainname: example.com
@@ -158,7 +175,7 @@ services:
    - openldapdata
   restart: always
   ports:
-   - '389:389'
+ #  - '389:389'
    - '636:636'
   environment:
    LDAP_DOMAIN: "example.com"
