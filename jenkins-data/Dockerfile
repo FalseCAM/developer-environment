@@ -1,3 +1,3 @@
-FROM jenkins:2.0-beta-1
+FROM jenkins
 VOLUME /var/jenkins_home
 ENTRYPOINT ["hostname"]

@@ -57,7 +57,7 @@ services:
   build: git-data
 
  jenkins:
-  image: jenkins:2.0-beta-1
+  image: jenkins
   domainname: example.com
   hostname: jenkins
   networks:
