@@ -108,6 +108,23 @@ services:
   build: gitlabrunner-data
 
 
+ redmine:
+  image: 'redmine'
+  domainname: example.com
+  hostname: redmine
+  networks:
+   - devenv
+  restart: always
+  volumes_from:
+   - redminedata
+#  ports:
+#  - '3000:3000'
+
+ redminedata:
+  image: busybox
+  volumes:
+   - /usr/src/redmine/files
+  command: 'true'
 
  nginx:
   build: nginx
