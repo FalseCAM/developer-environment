@@ -126,6 +126,36 @@ services:
    - /usr/src/redmine/files
   command: 'true'
 
+ openproject:
+  image: 'openproject/community:5.0'
+  domainname: example.com
+  hostname: openproject
+  networks:
+   - devenv
+  restart: always
+  volumes_from:
+   - openprojectdata
+  environment:
+   - SECRET_KEY_BASE=secret
+   - EMAIL_DELIVERY_METHOD=smtp
+   - SMTP_ADDRESS=smtp.gmail.com
+   - SMTP_PORT=587
+   - SMTP_DOMAIN=smtp.gmail.com
+   - SMTP_AUTHENTICATION=plain
+   - SMTP_ENABLE_STARTTLS_AUTO=true
+   - SMTP_USER_NAME="MYMAIL@gmail.com"
+   - SMTP_PASSWORD="Password1!"
+#  ports:
+#   - '8080:80'
+
+ openprojectdata:
+  image: busybox
+  volumes:
+   - /srv/var/opt/openproject/pgdata:/var/lib/postgresql/9.4/main
+   - /srv/var/opt/openproject/logs:/var/log/supervisor
+   - /srv/var/opt/openproject/static:/var/db/openproject
+  command: 'true'
+
  nginx:
   build: nginx
   domainname: example.com
@@ -151,6 +181,9 @@ services:
   restart: always
 # ports:
 #  - "80:80"
+
+
+
 
 #samba:
 # build: samba-ad-dc
