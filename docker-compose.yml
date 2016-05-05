@@ -172,6 +172,24 @@ services:
  nginxdata:
   build: nginx-data
 
+ downloads:
+  image: httpd
+  domainname: example.com
+  hostname: download
+  restart: always
+  networks:
+   - devenv
+  volumes_from:
+   - downloadsdata
+#  ports:
+#   - "80:80"
+
+ downloadsdata:
+  image: busybox
+  volumes:
+   - /srv/downloads:/usr/local/apache2/htdocs/
+  command: 'true'
+
  ldapaccountmanager:
   build: ldap-account-manager
   domainname: example.com
